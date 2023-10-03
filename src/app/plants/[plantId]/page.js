@@ -5,16 +5,35 @@ import {
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE;
+async function getData(id) {
+  const res = await fetch(`${BASE_URL}/plants/${id}`);
+
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
+
+export default async function PlantDetails({ params }) {
+  const res = await getData(params.plantId);
+
   return (
     <div className="p-2 flex flex-col gap-2">
       <div className="flex justify-between items-center">
         <div className="flex flex-row items-center gap-2">
-          <button className="btn btn-square btn-sm btn-outline text-lg">
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </button>
-          <div className="text-xl font-semibold">Tomato</div>
+          <Link href="/plants">
+            <button className="btn btn-square btn-sm btn-outline text-lg">
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </button>
+          </Link>
+          <div className="text-xl font-semibold">
+            <span>#{params.plantId}</span> {res.name}
+          </div>
         </div>
         <button className="btn btn-square btn-ghost text-xl">
           <FontAwesomeIcon icon={faBars} />
@@ -33,22 +52,10 @@ export default function Home() {
 
       <main className="flex flex-col pb-4 gap-2">
         <div className="flex flex-col p-2 backdrop-blur-sm px-3 border-l-4 border-primary">
-          <span className="font-bold text-xl">Tomato</span>
+          <span className="font-bold text-xl">{res.name}</span>
 
           <span className="text-lg text-primary mt-0">Description</span>
-          <span className="text-justify text-md">
-            Tomatoes are versatile and popular fruits, often mistaken for
-            vegetables in culinary contexts. They belong to the nightshade
-            family and originated in South America. These red, juicy orbs are
-            rich in vitamins, particularly vitamin C and K, and are a good
-            source of antioxidants like lycopene, known for its potential health
-            benefits. Tomatoes are a staple in various cuisines, used in salads,
-            sauces, soups, and more. They come in different varieties, from
-            cherry to beefsteak, each offering a unique flavor and texture.
-            Tomatoes have played a significant role in global cuisine and
-            continue to be a nutritious and flavorful addition to a wide range
-            of dishes.
-          </span>
+          <span className="text-justify text-md">{res.details}</span>
         </div>
 
         <div className="flex flex-col p-2 backdrop-blur-sm px-3 border-l-4 border-primary">
