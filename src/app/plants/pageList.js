@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCamera,
   faBars,
-  faMagnifyingGlass,
+  faMicrophone,
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -36,9 +36,9 @@ export function PlantListing({ data }) {
               onChange={(e) => setFilter(e.target.value)}
             />
           </div>
-          <div className="flex-none">
-            <button className="btn btn-square btn-outline">
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
+          <div className="flex-none hidden">
+            <button className="btn btn-square btn-outline text-xl">
+              <FontAwesomeIcon icon={faMicrophone} />
             </button>
           </div>
         </div>
