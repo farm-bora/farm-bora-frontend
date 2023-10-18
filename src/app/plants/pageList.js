@@ -7,10 +7,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export function PlantListing({ data }) {
   const [filter, setFilter] = useState("");
+  const filePickerRef = useRef();
+
   const plants = !filter
     ? data
     : data.filter((item) =>
@@ -57,13 +59,22 @@ export function PlantListing({ data }) {
       </div>
 
       <nav className="fixed bottom-0 right-0 w-full">
-        <div className="flex flex-col p-3">
-          <button className="btn btn-primary">
+        <div className="flex flex-col p-3 gap-2">
+          <button
+            className="btn btn-primary"
+            onClick={() => filePickerRef.current?.click()}
+          >
             <span>Take Photo</span>
             <span className="text-lg">
               <FontAwesomeIcon icon={faCamera} />
             </span>
           </button>
+
+          <input
+            type="file"
+            className="file-input file-input-bordered w-full hidden"
+            ref={filePickerRef}
+          />
         </div>
       </nav>
     </div>
@@ -74,7 +85,7 @@ function PlantCard({ imgSrc, plantId, name, description }) {
   return (
     <Link href={`/plants/${plantId}`}>
       <div
-        className={`cursor-pointer shadow flex flex-col gap-2 border-2 rounded tr-eo p-1
+        className={`cursor-pointer shadow flex flex-col gap-2 border-2 rounded tr-eo p-1 h-full
         border-base-content hover:ring-2 hover:ring-base-content hover:scale-105 active:scale-95 bg-base-100`}
       >
         <figure className="relative h-40">
