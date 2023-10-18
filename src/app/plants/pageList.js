@@ -9,15 +9,49 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE;
+
 export function PlantListing({ data }) {
   const [filter, setFilter] = useState("");
   const filePickerRef = useRef();
+  const [imageBase64, setImageBase64] = useState("");
 
   const plants = !filter
     ? data
     : data.filter((item) =>
         item.name.toLowerCase().includes(filter.toLowerCase())
       );
+
+  const submitImage = async (imageBase64) => {
+    if (!imageBase64) {
+      return;
+    }
+
+    let body = {
+      image_base64: imageBase64,
+    };
+
+    body = JSON.stringify(body);
+
+    const response = await fetch(`${BASE_URL}/plants/search_disease`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body,
+    }).then(async (response) => {
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw data;
+      }
+
+      return data;
+    });
+
+    console.log("submitImage", response);
+  };
 
   return (
     <div className="px-4 py-3 mt-3 relative">
@@ -73,6 +107,21 @@ export function PlantListing({ data }) {
           <input
             type="file"
             className="file-input file-input-bordered w-full hidden"
+            accept="image/*"
+            onChange={async (e) => {
+              let file = null;
+
+              const input = e.target;
+              if (input?.files?.length > 0) {
+                file = input.files[0];
+              }
+
+              const image_base64 = await toBase64(file);
+
+              submitImage(image_base64);
+              // console.log("Image b64", image_base64);
+              // setImageBase64(image_base64);
+            }}
             ref={filePickerRef}
           />
         </div>
@@ -105,3 +154,11 @@ function PlantCard({ imgSrc, plantId, name, description }) {
     </Link>
   );
 }
+
+const toBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+  });
