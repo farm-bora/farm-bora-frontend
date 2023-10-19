@@ -6,6 +6,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import Link from "next/link";
+import { marked } from "marked";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE;
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASE;
@@ -57,7 +58,10 @@ export default async function PlantDetails({ params }) {
           <span className="font-bold text-xl">{res.name}</span>
 
           <span className="text-lg text-primary mt-0">Description</span>
-          <span className="text-justify text-md">{res.details}</span>
+          <span
+            className="text-justify text-md"
+            dangerouslySetInnerHTML={{ __html: marked.parse(res.details) }}
+          ></span>
         </div>
 
         <div className="flex flex-col p-2 backdrop-blur-sm px-3 border-l-4 border-primary">
