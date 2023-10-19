@@ -12,7 +12,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE;
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASE;
 
 async function getData(id) {
-  const res = await fetch(`${BASE_URL}/plants/${id}`);
+  const res = await fetch(`${BASE_URL}/plants/${id}`, { cache: "no-store" });
 
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
