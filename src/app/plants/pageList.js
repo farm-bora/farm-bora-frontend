@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE;
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASE;
 
 export function PlantListing({ data }) {
   const [filter, setFilter] = useState("");
@@ -84,7 +85,7 @@ export function PlantListing({ data }) {
             <PlantCard
               key={item.id}
               plantId={item.id}
-              imgSrc="/images/demos/shalev-cohen-5Oi5sG6G0z8-unsplash.jpg"
+              imgSrc={`${BACKEND_URL}/media/${item.image}`}
               name={item.name}
               description={item.botanical_name}
             />
