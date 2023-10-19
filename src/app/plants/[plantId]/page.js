@@ -67,36 +67,16 @@ export default async function PlantDetails({ params }) {
         <div className="flex flex-col p-2 backdrop-blur-sm px-3 border-l-4 border-primary">
           <span className="text-lg text-primary mt-3">Diseases</span>
           <span className="flex flex-wrap gap-2">
-            <button className="btn btn-primary btn-sm btn-outline">
-              Blight
-            </button>
-            <button className="btn btn-primary btn-sm btn-outline">
-              Grey Rot
-            </button>
-            <button className="btn btn-primary btn-sm btn-outline">
-              Spider Mites
-            </button>
+            {res.diseases.map((item) => (
+              <button
+                className="btn btn-primary btn-sm btn-outline capitalize"
+                key={item.id}
+              >
+                {item.name}
+              </button>
+            ))}
           </span>
         </div>
-      </main>
-    </div>
-  );
-}
-function PlantCard({ imgSrc, name, description }) {
-  return (
-    <div className="cursor-pointer shadow flex flex-col gap-2 border-2 rounded border-base-content tr-eo hover:ring-2 hover:ring-base-content hover:scale-105 bg-base-100 p-1">
-      <figure className="relative h-40">
-        <Image
-          src={imgSrc}
-          alt="image"
-          style={{ objectFit: "cover" }}
-          fill
-          className="rounded-t"
-        />
-      </figure>
-      <main className="p-2 flex flex-col pb-4">
-        <span className="font-bold">{name}</span>
-        <span className="text-sm">{description}</span>
       </main>
     </div>
   );
