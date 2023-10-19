@@ -8,6 +8,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE;
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASE;
+
 async function getData(id) {
   const res = await fetch(`${BASE_URL}/plants/${id}`);
 
@@ -42,7 +44,7 @@ export default async function PlantDetails({ params }) {
 
       <figure className="relative h-96">
         <Image
-          src={"/images/demos/shalev-cohen-5Oi5sG6G0z8-unsplash.jpg"}
+          src={`${BACKEND_URL}/media/${res.image}`}
           alt="image"
           style={{ objectFit: "cover" }}
           fill
