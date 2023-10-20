@@ -199,8 +199,12 @@ export function PlantListing({ data }) {
                     </td>
                     <td className="whitespace-nowrap">
                       {prediction.diagnosis !== "healthy" ? (
-                        <Link href={`/plants/${prediction.plant_id}`}>
-                          {prediction.diagnosis}
+                        <Link
+                          href={`/plants/${prediction.plant_id}/diseases/${prediction.disease_id}`}
+                        >
+                          <span className="text-primary underline cursor-pointer">
+                            {prediction.diagnosis}
+                          </span>
                         </Link>
                       ) : (
                         <div className="badge badge-primary text-xs">
@@ -209,7 +213,7 @@ export function PlantListing({ data }) {
                       )}
                     </td>
                     <td className="whitespace-nowrap text-right">
-                      {Math.round(prediction.confidence * 10000) * 0.01}%
+                      {confidenceFormatter.format(prediction.confidence * 100)}%
                     </td>
                   </tr>
                 ))}
@@ -260,3 +264,8 @@ const toBase64 = (file) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = reject;
   });
+
+const confidenceFormatter = new Intl.NumberFormat("en-GB", {
+  minimumFractionDigits: 4,
+  maximumFractionDigits: 4,
+});
