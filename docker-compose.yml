@@ -1,0 +1,13 @@
+version: "3"
+services:
+  runner:
+    build:
+      context: .
+      target: runner
+    image: farm_bora/frontend_runner
+    environment:
+      NEXT_PUBLIC_API_BASE: "http://0.0.0.0:8000/api"
+      NEXT_PUBLIC_BACKEND_BASE: "http://0.0.0.0:8000"
+    # ports:
+    #   - 3000:3000
+    network_mode: "host"
