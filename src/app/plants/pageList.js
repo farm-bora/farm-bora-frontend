@@ -15,6 +15,7 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASE;
 
 export function PlantListing({ data }) {
   const [filter, setFilter] = useState("");
+  const modalRef = useRef();
   const filePickerRef = useRef();
 
   const plants = !filter
@@ -25,6 +26,7 @@ export function PlantListing({ data }) {
 
   const [isSubmitting, setIsSubmitting] = useState();
   const [serverResponse, setServerResponse] = useState(null);
+  const [imageResults, setImageResults] = useState(null);
   const submitImage = async (imageBase64) => {
     if (!imageBase64) {
       return;
@@ -64,6 +66,7 @@ export function PlantListing({ data }) {
       });
 
       console.log("submitImage", response);
+      setImageResults(response);
       setServerResponse({
         type: "success",
         message: "Image processed successfully",
@@ -72,6 +75,7 @@ export function PlantListing({ data }) {
       setTimeout(() => {
         setServerResponse(null);
       }, 5000);
+      modalRef.current.showModal();
     } catch (e) {
       console.warn("warning", e?.message);
       setServerResponse({
@@ -170,6 +174,56 @@ export function PlantListing({ data }) {
           </span>
         </div>
       )}
+
+      <dialog ref={modalRef} className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Results</h3>
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th className="whitespace-nowrap">Plant</th>
+                  <th className="whitespace-nowrap">Diagnosis</th>
+                  <th className="whitespace-nowrap text-right">Confidence</th>
+                </tr>
+              </thead>
+              <tbody>
+                {imageResults?.confidences?.map((prediction, idx) => (
+                  <tr key={prediction.label}>
+                    <td className="whitespace-nowrap">
+                      <Link href={`/plants/${prediction.plant_id}`}>
+                        <span className="text-primary underline cursor-pointer">
+                          {prediction.plant_name}
+                        </span>
+                      </Link>
+                    </td>
+                    <td className="whitespace-nowrap">
+                      {prediction.diagnosis !== "healthy" ? (
+                        <Link href={`/plants/${prediction.plant_id}`}>
+                          {prediction.diagnosis}
+                        </Link>
+                      ) : (
+                        <div className="badge badge-primary text-xs">
+                          Healthy
+                        </div>
+                      )}
+                    </td>
+                    <td className="whitespace-nowrap text-right">
+                      {Math.round(prediction.confidence * 10000) * 0.01}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }
