@@ -45,8 +45,9 @@ export default async function PlantDetails({ params }) {
       <main className="flex flex-col pb-4 gap-2">
         <div className="flex flex-col p-2 backdrop-blur-sm px-3 border-l-4 border-primary">
           <span className="font-bold text-xl">{res.name}</span>
+        </div>
 
-          <span className="text-lg text-primary mt-0">Description</span>
+        <div className="flex flex-col p-2 backdrop-blur-sm px-3">
           <span
             className="text-justify text-md"
             dangerouslySetInnerHTML={{ __html: marked.parse(res.details) }}
