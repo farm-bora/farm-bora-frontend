@@ -8,6 +8,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import Alert from "@/components/display/alert";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE;
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASE;
@@ -15,7 +16,6 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASE;
 export function PlantListing({ data }) {
   const [filter, setFilter] = useState("");
   const filePickerRef = useRef();
-  const [imageBase64, setImageBase64] = useState("");
 
   const plants = !filter
     ? data
@@ -23,6 +23,8 @@ export function PlantListing({ data }) {
         item.name.toLowerCase().includes(filter.toLowerCase())
       );
 
+  const [isSubmitting, setIsSubmitting] = useState();
+  const [serverResponse, setServerResponse] = useState(null);
   const submitImage = async (imageBase64) => {
     if (!imageBase64) {
       return;
@@ -34,24 +36,54 @@ export function PlantListing({ data }) {
 
     body = JSON.stringify(body);
 
-    const response = await fetch(`${BASE_URL}/plants/search_disease`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body,
-    }).then(async (response) => {
-      const data = await response.json();
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`${BASE_URL}/plants/search_disease`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body,
+      }).then(async (response) => {
+        console.log("data-response", response.headers.get("content-type"));
+        if (response.status == 500) {
+          throw { message: "Internal server error" };
+        }
 
-      if (!response.ok) {
-        throw data;
-      }
+        const data =
+          response.headers.get("content-type") === "application/json"
+            ? await response.json()
+            : { message: "Could not process image" };
 
-      return data;
-    });
+        if (!response.ok) {
+          throw data;
+        }
 
-    console.log("submitImage", response);
+        return data;
+      });
+
+      console.log("submitImage", response);
+      setServerResponse({
+        type: "success",
+        message: "Image processed successfully",
+      });
+
+      setTimeout(() => {
+        setServerResponse(null);
+      }, 5000);
+    } catch (e) {
+      console.warn("warning", e?.message);
+      setServerResponse({
+        type: "warning",
+        message: e?.message ?? "Could not process image",
+      });
+      setTimeout(() => {
+        setServerResponse(null);
+      }, 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -98,7 +130,10 @@ export function PlantListing({ data }) {
           <button
             className="btn btn-primary"
             onClick={() => filePickerRef.current?.click()}
+            disabled={isSubmitting}
           >
+            {isSubmitting && <span class="loading loading-spinner"></span>}
+
             <span>Take Photo</span>
             <span className="text-lg">
               <FontAwesomeIcon icon={faCamera} />
@@ -127,6 +162,14 @@ export function PlantListing({ data }) {
           />
         </div>
       </nav>
+
+      {serverResponse && (
+        <div className="fixed top-0 left-0 w-full">
+          <span className="flex flex-row w-full justify-end p-3">
+            <Alert type={serverResponse?.type} text={serverResponse?.message} />
+          </span>
+        </div>
+      )}
     </div>
   );
 }
