@@ -3,6 +3,8 @@
 import { PlantListing } from "./pageList";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE;
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASE;
+
 export async function getPlants() {
   const res = await fetch(`${BASE_URL}/plants`, { cache: "no-store" });
 
@@ -17,5 +19,7 @@ export async function getPlants() {
 export default async function Page() {
   const data = await getPlants();
 
-  return <PlantListing data={data} />;
+  return (
+    <PlantListing data={data} BASE_URL={BASE_URL} BACKEND_URL={BACKEND_URL} />
+  );
 }

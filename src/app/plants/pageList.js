@@ -10,10 +10,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import Alert from "@/components/display/alert";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE;
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASE;
-
-export function PlantListing({ data }) {
+export function PlantListing({ data, BASE_URL, BACKEND_URL }) {
   const [filter, setFilter] = useState("");
   const modalRef = useRef();
   const filePickerRef = useRef();
