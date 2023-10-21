@@ -4,7 +4,7 @@ import { PlantListing } from "./pageList";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE;
 export async function getPlants() {
-  const res = await fetch(`${BASE_URL}/plants`);
+  const res = await fetch(`${BASE_URL}/plants`, { cache: "no-store" });
 
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
