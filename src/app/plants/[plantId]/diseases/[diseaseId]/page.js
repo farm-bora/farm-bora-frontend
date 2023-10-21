@@ -20,5 +20,12 @@ async function getData(plantId, diseaseId) {
 export default async function Page({ params }) {
   const res = await getData(params.plantId, params.diseaseId);
 
-  return <DiseaseDetails res={res} params={params} BACKEND_URL={BACKEND_URL} />;
+  return (
+    <DiseaseDetails
+      res={res}
+      params={params}
+      BACKEND_URL={BACKEND_URL}
+      BASE_URL={BASE_URL}
+    />
+  );
 }

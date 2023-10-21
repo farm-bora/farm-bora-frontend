@@ -133,7 +133,7 @@ export function PlantListing({ data, BASE_URL, BACKEND_URL }) {
             onClick={() => filePickerRef.current?.click()}
             disabled={isSubmitting}
           >
-            {isSubmitting && <span class="loading loading-spinner"></span>}
+            {isSubmitting && <span className="loading loading-spinner"></span>}
 
             <span>Take Photo</span>
             <span className="text-lg">

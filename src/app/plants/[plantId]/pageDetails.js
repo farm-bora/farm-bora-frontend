@@ -105,7 +105,9 @@ export function PlantDetails({ params, res, BASE_URL, BACKEND_URL }) {
                 onClick={() => submitText(res.details)}
                 disabled={isSubmitting}
               >
-                {isSubmitting && <span class="loading loading-spinner"></span>}
+                {isSubmitting && (
+                  <span className="loading loading-spinner"></span>
+                )}
 
                 <span>Play</span>
                 <span className="text-lg">
