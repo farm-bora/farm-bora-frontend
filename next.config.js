@@ -12,8 +12,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname:
-          "https://farm-bora-frontend.18rsgxmzc56t.eu-gb.codeengine.appdomain.cloud",
+        hostname: "**.codeengine.appdomain.cloud",
       },
     ],
   },
